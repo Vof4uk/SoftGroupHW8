@@ -1,0 +1,32 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans xmlns = "http://www.springframework.org/schema/beans"
+       xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation = "http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean id = "news" class = "ua.mykytenko.service.NewsServiceImpl">
+        <constructor-arg index="1" value="5"/>
+        <constructor-arg index="0">
+            <list>
+                <bean class="ua.mykytenko.newsSources.petrimazepaNewsServiceImpl" scope="prototype"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <!--<bean id="writer" class="ua.mykytenko.service.FileWriterSimpleImpl" init-method="init">-->
+        <!--<constructor-arg index="0" type="java.lang.String" value="news.txt"/>-->
+    <!--</bean>-->
+
+    <bean id="writer" class="ua.mykytenko.service.CashedFileWriterServiceImpl"
+          init-method="init" destroy-method="destroy">
+        <constructor-arg index="0" type="java.lang.String" value="news.txt"/>
+        <constructor-arg index="1" value="20"/>
+    </bean>
+
+    <bean id="app" class="ua.mykytenko.app.xmlconfig.Application">
+        <constructor-arg ref="writer"/>
+        <constructor-arg ref="news"/>
+    </bean>
+
+</beans>
